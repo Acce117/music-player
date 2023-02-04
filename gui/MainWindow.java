@@ -23,6 +23,7 @@ public class MainWindow extends JDialog {
     private JPanel playlistPane;
     private JPanel auxPane1;
     private int selectedTab;
+
     public MainWindow() {
         setContentPane(contentPane);
         setModal(true);
@@ -57,6 +58,7 @@ public class MainWindow extends JDialog {
             button1.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
+                    //TODO a window to ask for the name of the playlist
                     tabbedPane1.addTab("eeded",null,new JPanel(),null);
                 }
             });
