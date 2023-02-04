@@ -1,10 +1,13 @@
 package gui;
 
+import src.Explorer;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 
 public class MainWindow extends JDialog {
@@ -23,7 +26,7 @@ public class MainWindow extends JDialog {
     private JPanel playlistPane;
     private JPanel auxPane1;
     private int selectedTab;
-    public MainWindow() {
+    public MainWindow() throws IOException {
         setContentPane(contentPane);
         setModal(true);
 
