@@ -1,6 +1,7 @@
 package gui;
 
 import src.Explorer;
+import utils.CellRendererCustomized;
 import utils.TreeModelCustomized;
 
 import javax.swing.*;
@@ -68,6 +69,9 @@ public class MainWindow extends JDialog {
         {//tree1 configuration
             tree1.setBackground(null);
             tree1.setModel(new TreeModelCustomized());
+            tree1.setRootVisible(false);
+            tree1.setCellRenderer(new CellRendererCustomized());
+
         }
     }
 

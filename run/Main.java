@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        /*try {
+        try {
             UIManager.setLookAndFeel( new FlatLightLaf() );
         } catch( Exception ex ) {
             System.err.println( "Failed to initialize LaF" );
@@ -21,7 +21,7 @@ public class Main {
         MainWindow dialog = new MainWindow();
         dialog.pack();
         dialog.setVisible(true);
-        System.exit(0);*/
+        System.exit(0);
         /*Path path = Path.of("D:\\Multimedia");
         ArrayList<Path> a = new ArrayList<>();
         try (var files = Files.walk(path)) {
@@ -44,11 +44,11 @@ public class Main {
         System.out.println(Files.exists(path));*/
         //Stream a = Files.list(path);
 
-        Explorer a = Explorer.getInstance();
+        /*Explorer a = Explorer.getInstance();
         ArrayList<Path> list = a.listRecursively();
         for(Path p: list){
             System.out.println(p);
-        }
+        }*/
         /*Stream<Path> a=Files.list(path);
 
         System.out.println(a.toArray().length);*/
