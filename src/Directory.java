@@ -3,6 +3,7 @@ package src;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.DosFileAttributes;
 import java.util.ArrayList;
 
 public class Directory extends File{
@@ -17,10 +18,13 @@ public class Directory extends File{
         try(var files = Files.list(root)){
             files.forEach(f-> {
                 try {
-                    if(Files.isDirectory(f))
-                        this.sons.add(new Directory(f.toString()));
-                    else
-                        this.sons.add(new File(f.toString()));
+                    DosFileAttributes attrs = Files.readAttributes(f, DosFileAttributes.class);
+                    if(!attrs.isSystem()) {
+                        if (Files.isDirectory(f))
+                            this.sons.add(new Directory(f.toString()));
+                        else
+                            this.sons.add(new File(f.toString()));
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

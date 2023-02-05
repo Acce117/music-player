@@ -1,6 +1,7 @@
 package gui;
 
 import src.Explorer;
+import utils.TreeModelCustomized;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -66,6 +67,7 @@ public class MainWindow extends JDialog {
         }
         {//tree1 configuration
             tree1.setBackground(null);
+            tree1.setModel(new TreeModelCustomized());
         }
     }
 
