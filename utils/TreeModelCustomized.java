@@ -1,15 +1,13 @@
 package utils;
 
-import src.Explorer;
-
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.io.IOException;
+import java.nio.file.FileSystemException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.DosFileAttributes;
-import java.util.Comparator;
 import java.util.stream.Stream;
 
 /*
@@ -19,7 +17,6 @@ it takes as root the path used by the Explorer class in the src package
 public class TreeModelCustomized implements TreeModel {
     private Path root;
     public TreeModelCustomized() throws IOException {
-        //this.root = Explorer.getInstance().getRoot().toFile();
         this.root = Path.of("D:\\");
     }
 
@@ -30,28 +27,38 @@ public class TreeModelCustomized implements TreeModel {
     * sort the list to show the files as would do it the default explorer
     * return the resulted list
     */
-    private Object[] getChildren(Object parent){
-        Object children[]=  new String[0];
+    private Object[] getChildren(Object parent) {
+        Object children[] = new String[0];
         Stream<Path> aux;
         try {
             aux = Files.list(Path.of(parent.toString()));
-            children = aux.filter(e-> {
+            children = aux.filter(e -> {
+                boolean result = false;
                 try {
                     DosFileAttributes attrs = Files.readAttributes(e, DosFileAttributes.class);
-                    return !attrs.isSystem();// && Files.isDirectory(e);// || e.toString().endsWith("mp3");
-                } catch (IOException ex) {
+                    result = !attrs.isSystem() && Files.isDirectory(e) || e.toString().endsWith("mp3");
+                }
+                catch (FileSystemException ex){
+
+                }
+                catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+                return result;
             }).sorted((o1, o2) -> {
                 int result = 0;
-                if(!Files.isDirectory(o1) && Files.isDirectory(o2))
+                if (!Files.isDirectory(o1) && Files.isDirectory(o2))
                     result = 1;
-                if(Files.isDirectory(o1) && !Files.isDirectory(o2))
+                if (Files.isDirectory(o1) && !Files.isDirectory(o2))
                     result = -1;
                 return result;
             }).toArray();
 
-        } catch (IOException e) {
+        }
+        catch (FileSystemException e){
+
+        }
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
         return children;

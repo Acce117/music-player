@@ -2,14 +2,9 @@ package run;
 
 import gui.MainWindow;
 import com.formdev.flatlaf.FlatLightLaf;
-import src.Explorer;
 
 import javax.swing.*;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
