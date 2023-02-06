@@ -1,8 +1,10 @@
 package utils;
 
 import javax.swing.event.TreeModelListener;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystemException;
 import java.nio.file.Files;
@@ -16,10 +18,19 @@ it takes as root the path used by the Explorer class in the src package
  */
 public class TreeModelCustomized implements TreeModel {
     private Path root;
+    private Path[] rootChildren;
     public TreeModelCustomized() throws IOException {
-        this.root = Path.of("D:\\");
+        this.root = Path.of("System");
+        fillRootChildren();
     }
 
+    private void fillRootChildren(){
+        File[] rootsSystem = File.listRoots();
+        rootChildren = new Path[rootsSystem.length];
+        for(int i = 0; i< rootsSystem.length; i++){
+            rootChildren[i] = rootsSystem[i].toPath();
+        }
+    }
     /*
     * getChildren(Object)
     * it takes an object parent, makes a Path with the parent and list the children contained in it
@@ -28,6 +39,7 @@ public class TreeModelCustomized implements TreeModel {
     * return the resulted list
     */
     private Object[] getChildren(Object parent) {
+
         Object children[] = new String[0];
         Stream<Path> aux;
         try {
@@ -61,6 +73,7 @@ public class TreeModelCustomized implements TreeModel {
         catch (IOException e) {
             throw new RuntimeException(e);
         }
+
         return children;
     }
     @Override
@@ -77,8 +90,11 @@ public class TreeModelCustomized implements TreeModel {
     * or an Object originally a Path if the child is found*/
     @Override
     public Object getChild(Object parent, int index) {
-        Object children[]=getChildren(parent);
         Object result = null;
+        Object children[] = rootChildren;
+        if(!parent.toString().equals("System")) {
+           children = getChildren(parent);
+        }
 
         if(children.length != 0 && index < children.length){
             result = children[index];
@@ -88,7 +104,10 @@ public class TreeModelCustomized implements TreeModel {
     }
     @Override
     public int getChildCount(Object parent) {
-        Object children[]=getChildren(parent);
+        Object children[] = rootChildren;
+        if(!parent.toString().equals("System")) {
+           children = getChildren(parent);
+        }
 
         return children.length;
     }
@@ -100,7 +119,7 @@ public class TreeModelCustomized implements TreeModel {
     @Override
     public boolean isLeaf(Object node) {
         boolean result = false;
-        if(node != null)
+        if(node != null && !node.toString().equals("System"))
             result = !(Files.isDirectory(Path.of(node.toString())));
         return result;
     }

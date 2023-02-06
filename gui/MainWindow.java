@@ -83,20 +83,18 @@ public class MainWindow extends JDialog {
             tree1.addTreeSelectionListener(new TreeSelectionListener() {
                 @Override
                 public void valueChanged(TreeSelectionEvent e) {
-                    //System.out.println(tree1.getSelectionPath().getLastPathComponent());
+
                     try {
                         Path file = (Path) tree1.getSelectionPath().getLastPathComponent();
-                        if(!Files.isDirectory(file)) {
+                        if(!Files.isDirectory(file) && Files.exists(file)) {
                             playerInstance.loadFile(file);
                             play.setEnabled(true);
                             stop.setEnabled(true);
                         }
-                        //playerInstance.play();
+
                     }
                     catch (BasicPlayerException ex) {
-                        //throw new RuntimeException(ex);
-                        ex.printStackTrace();
-                        //System.out.println(ex.getMessage());
+                        throw new RuntimeException(ex);
                     }
                 }
             });
