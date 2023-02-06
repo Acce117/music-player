@@ -1,10 +1,14 @@
 package gui;
 
+import utils.CellRendererCustomized;
+import utils.TreeModelCustomized;
+
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 
 public class MainWindow extends JDialog {
@@ -23,8 +27,7 @@ public class MainWindow extends JDialog {
     private JPanel playlistPane;
     private JPanel auxPane1;
     private int selectedTab;
-
-    public MainWindow() {
+    public MainWindow() throws IOException {
         setContentPane(contentPane);
         setModal(true);
 
@@ -65,6 +68,15 @@ public class MainWindow extends JDialog {
         }
         {//tree1 configuration
             tree1.setBackground(null);
+            tree1.setModel(new TreeModelCustomized());
+            tree1.setRootVisible(false);
+            tree1.setCellRenderer(new CellRendererCustomized());
+            tree1.addTreeSelectionListener(new TreeSelectionListener() {
+                @Override
+                public void valueChanged(TreeSelectionEvent e) {
+                    System.out.println(tree1.getSelectionPath().getLastPathComponent());
+                }
+            });
         }
     }
 
