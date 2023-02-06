@@ -3,13 +3,11 @@ package gui;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import src.MusicPlayer;
 import utils.CellRendererCustomized;
+import utils.PlaylistModel;
 import utils.TreeModelCustomized;
-
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,16 +22,16 @@ public class MainWindow extends JDialog {
     private JLabel trackImage;
     private JTabbedPane optionPanel;
     private JPanel tabbedPane;
-    private JTree tree1;
+    private JTree searchTree;
     private JPanel directoryPane;
-    private JTabbedPane tabbedPane1;
+    private JTabbedPane playlists;
     private JButton button1;
     private JPanel playlistPane;
     private JPanel auxPane1;
     private JButton stop;
+    private JTable table1;
     private int selectedTab;
-
-    private MusicPlayer playerInstance;
+    final private MusicPlayer playerInstance;
     public MainWindow() throws IOException {
         this.playerInstance = MusicPlayer.getInstance();
 
@@ -67,53 +65,46 @@ public class MainWindow extends JDialog {
         {//playlistPane configuration
             playlistPane.setBackground(null);
 
-            button1.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    //TODO a window to ask for the name of the playlist
-                    tabbedPane1.addTab("eeded",null,new JPanel(),null);
-                }
+            button1.addActionListener(e -> {
+                AskForPlaylistName ask = new AskForPlaylistName(playlists);
+                ask.pack();
+                ask.setVisible(true);
             });
         }
         {//tree1 configuration
-            tree1.setBackground(null);
-            tree1.setModel(new TreeModelCustomized());
-            tree1.setRootVisible(false);
-            tree1.setCellRenderer(new CellRendererCustomized());
-            tree1.addTreeSelectionListener(new TreeSelectionListener() {
-                @Override
-                public void valueChanged(TreeSelectionEvent e) {
-
-                    try {
-                        Path file = (Path) tree1.getSelectionPath().getLastPathComponent();
-                        if(!Files.isDirectory(file) && Files.exists(file)) {
-                            playerInstance.loadFile(file);
-                            play.setEnabled(true);
-                            stop.setEnabled(true);
-                        }
-
+            searchTree.setBackground(null);
+            searchTree.setModel(new TreeModelCustomized());
+            searchTree.setRootVisible(false);
+            searchTree.setCellRenderer(new CellRendererCustomized());
+            searchTree.addTreeSelectionListener(e -> {
+                try {
+                    Path file = (Path) searchTree.getSelectionPath().getLastPathComponent();
+                    if(!Files.isDirectory(file) && Files.exists(file)) {
+                        playerInstance.loadFile(file);
+                        play.setEnabled(true);
+                        stop.setEnabled(true);
                     }
-                    catch (BasicPlayerException ex) {
-                        throw new RuntimeException(ex);
-                    }
+
+                }
+                catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
                 }
             });
         }
-        play.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    if(playerInstance.isPlaying() == 1)
-                        playerInstance.pause();
-                    else if(playerInstance.isPlaying() == 2)
-                        playerInstance.resume();
-                    else
-                        playerInstance.play();
-                } catch (BasicPlayerException ex) {
-                    throw new RuntimeException(ex);
-                }
+        play.addActionListener(e -> {
+            try {
+                if(playerInstance.isPlaying() == 1)
+                    playerInstance.pause();
+                else if(playerInstance.isPlaying() == 2)
+                    playerInstance.resume();
+                else
+                    playerInstance.play();
+            } catch (BasicPlayerException ex) {
+                throw new RuntimeException(ex);
             }
         });
+
+        table1.setModel(new PlaylistModel());
     }
 
     private void createUIComponents() {
@@ -145,14 +136,11 @@ public class MainWindow extends JDialog {
             stop.setBackground(null);
             stop.setBorder(null);
             stop.setEnabled(false);
-            stop.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    try {
-                        playerInstance.stop();
-                    } catch (BasicPlayerException ex) {
-                        throw new RuntimeException(ex);
-                    }
+            stop.addActionListener(e -> {
+                try {
+                    playerInstance.stop();
+                } catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
                 }
             });
         }

@@ -2,13 +2,10 @@ package run;
 
 import gui.MainWindow;
 import com.formdev.flatlaf.FlatLightLaf;
-import javazoom.jlgui.basicplayer.BasicPlayerException;
-
 import javax.swing.*;
 import java.io.IOException;
-
 public class Main {
-    public static void main(String[] args) throws IOException, BasicPlayerException {
+    public static void main(String[] args) throws IOException{
         try {
             UIManager.setLookAndFeel( new FlatLightLaf() );
         } catch( Exception ex ) {
