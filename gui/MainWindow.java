@@ -1,5 +1,7 @@
 package gui;
 
+import javazoom.jlgui.basicplayer.BasicPlayerException;
+import src.MusicPlayer;
 import utils.CellRendererCustomized;
 import utils.TreeModelCustomized;
 
@@ -9,6 +11,8 @@ import javax.swing.event.TreeSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 
 public class MainWindow extends JDialog {
@@ -26,8 +30,13 @@ public class MainWindow extends JDialog {
     private JButton button1;
     private JPanel playlistPane;
     private JPanel auxPane1;
+    private JButton stop;
     private int selectedTab;
+
+    private MusicPlayer playerInstance;
     public MainWindow() throws IOException {
+        this.playerInstance = MusicPlayer.getInstance();
+
         setContentPane(contentPane);
         setModal(true);
 
@@ -74,10 +83,39 @@ public class MainWindow extends JDialog {
             tree1.addTreeSelectionListener(new TreeSelectionListener() {
                 @Override
                 public void valueChanged(TreeSelectionEvent e) {
-                    System.out.println(tree1.getSelectionPath().getLastPathComponent());
+                    //System.out.println(tree1.getSelectionPath().getLastPathComponent());
+                    try {
+                        Path file = (Path) tree1.getSelectionPath().getLastPathComponent();
+                        if(!Files.isDirectory(file)) {
+                            playerInstance.loadFile(file);
+                            play.setEnabled(true);
+                            stop.setEnabled(true);
+                        }
+                        //playerInstance.play();
+                    }
+                    catch (BasicPlayerException ex) {
+                        //throw new RuntimeException(ex);
+                        ex.printStackTrace();
+                        //System.out.println(ex.getMessage());
+                    }
                 }
             });
         }
+        play.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    if(playerInstance.isPlaying() == 1)
+                        playerInstance.pause();
+                    else if(playerInstance.isPlaying() == 2)
+                        playerInstance.resume();
+                    else
+                        playerInstance.play();
+                } catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+        });
     }
 
     private void createUIComponents() {
@@ -87,18 +125,38 @@ public class MainWindow extends JDialog {
             play = new JButton();
             play.setBackground(null);
             play.setBorder(null);
+            play.setEnabled(false);
         }
 
         {//previous button's configuration
             previous = new JButton();
             previous.setBackground(null);
             previous.setBorder(null);
+            previous.setEnabled(false);
         }
 
         {//next button's configuration
             next = new JButton();
             next.setBackground(null);
             next.setBorder(null);
+            next.setEnabled(false);
+        }
+
+        {//stop button's configuration
+            stop = new JButton();
+            stop.setBackground(null);
+            stop.setBorder(null);
+            stop.setEnabled(false);
+            stop.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    try {
+                        playerInstance.stop();
+                    } catch (BasicPlayerException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            });
         }
     }
 }

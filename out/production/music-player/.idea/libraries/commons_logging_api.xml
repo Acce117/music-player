@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="commons-logging-api">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/commons-logging-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jflac-1.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jl1.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jmactritonusspi1.74.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jml-1.0b4.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jogg-0.0.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jorbis-0.0.15.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/jspeex0.9.7.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/kj_dsp1.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/substance.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/tritonus_share.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/Ejecutables .jar/MP3seth/lib/vorbisspi1.0.2.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../../Programming/In Java/External libraris/audioPlaying/mp3spi-1.9.5.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
