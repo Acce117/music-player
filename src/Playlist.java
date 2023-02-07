@@ -2,6 +2,8 @@ package src;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.List;
+
 public class Playlist {
     private ArrayList<Path> tracks;
     private int size;
@@ -14,18 +16,23 @@ public class Playlist {
     public Path getTrack(int index){
         return tracks.get(index);
     }
-
     public void addTrack(Path newTrack){
         this.tracks.add(newTrack);
         size++;
     }
-
     public void removeTrack(int index){
         this.tracks.remove(index);
         size--;
     }
-
     public int getSize(){
         return size;
+    }
+
+    public void addTracks(Path [] newTracks){
+        this.tracks.addAll(List.of(newTracks));
+    }
+
+    public String getName() {
+        return name;
     }
 }

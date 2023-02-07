@@ -1,5 +1,6 @@
 package gui;
 
+import src.Controller;
 import utils.Validator;
 
 import javax.swing.*;
@@ -22,6 +23,7 @@ public class AskForPlaylistName extends JDialog {
                 Validator.emptyStringCheck(name);
 
                 tabbedPane.addTab(name,null, getNewPanel(),null);
+                Controller.getInstance().addPlaylist(name);
                 dispose();
             }
             catch(Exception ex){
