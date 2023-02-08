@@ -15,6 +15,7 @@ public class PlaylistModel extends DefaultTableModel {
         actualPlaylist = instancesCount;
         instancesCount++;
         row = new String[1];
+        addColumn("Tracks");
     }
 
     public void update(){
@@ -28,7 +29,7 @@ public class PlaylistModel extends DefaultTableModel {
     }
 
     public void addRow(Path track) {
-        row[0] = track.toString();
+        row[0] = track.getFileName().toString();
         super.addRow(row);
     }
 

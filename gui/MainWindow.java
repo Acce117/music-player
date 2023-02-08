@@ -8,6 +8,7 @@ import utils.PlaylistModel;
 import utils.TreeModelCustomized;
 import javax.swing.*;
 import javax.swing.tree.TreePath;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -100,18 +101,10 @@ public class MainWindow extends JDialog {
             };
             searchTree.addMouseListener(ml);
         }
-        play.addActionListener(e -> {
-            try {
-                if(playerInstance.isPlaying() == 1)
-                    playerInstance.pause();
-                else if(playerInstance.isPlaying() == 2)
-                    playerInstance.resume();
-                else
-                    playerInstance.play();
-            } catch (BasicPlayerException ex) {
-                throw new RuntimeException(ex);
-            }
-        });
+
+        {//trackImage configuration
+            paintTrackImageLabel();
+        }
 
         getPopupMenu();
 
@@ -124,27 +117,51 @@ public class MainWindow extends JDialog {
         {//play button's configuration
             play = new JButton();
             play.setBackground(null);
+            play.setSize(15, 25);
             play.setBorder(null);
             play.setEnabled(false);
+            ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (6).png")));
+            play.setIcon(new ImageIcon(image.getImage().getScaledInstance(play.getWidth(), play.getHeight(), Image.SCALE_SMOOTH)));
+            play.addActionListener(e -> {
+                try {
+                    if(playerInstance.isPlaying() == 1)
+                        playerInstance.pause();
+                    else if(playerInstance.isPlaying() == 2)
+                        playerInstance.resume();
+                    else
+                        playerInstance.play();
+                } catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
+                }
+            });
         }
 
         {//previous button's configuration
             previous = new JButton();
             previous.setBackground(null);
+            previous.setSize(20, 18);
             previous.setBorder(null);
             previous.setEnabled(false);
+            ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (11).png")));
+            previous.setIcon(new ImageIcon(image.getImage().getScaledInstance(previous.getWidth(), previous.getHeight(), Image.SCALE_SMOOTH)));
+
         }
 
         {//next button's configuration
             next = new JButton();
             next.setBackground(null);
+            next.setSize(20, 18);
             next.setBorder(null);
             next.setEnabled(false);
+            ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (10).png")));
+            next.setIcon(new ImageIcon(image.getImage().getScaledInstance(next.getWidth(), next.getHeight(), Image.SCALE_SMOOTH)));
+
         }
 
         {//stop button's configuration
             stop = new JButton();
             stop.setBackground(null);
+            stop.setSize(25, 25);
             stop.setBorder(null);
             stop.setEnabled(false);
             stop.addActionListener(e -> {
@@ -154,6 +171,9 @@ public class MainWindow extends JDialog {
                     throw new RuntimeException(ex);
                 }
             });
+            ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (7).png")));
+            stop.setIcon(new ImageIcon(image.getImage().getScaledInstance(stop.getWidth(), stop.getHeight(), Image.SCALE_SMOOTH)));
+
         }
     }
 
@@ -171,18 +191,23 @@ public class MainWindow extends JDialog {
 
     private void fillMenu(){
         menu.removeAll();
+
         for(int i = 0; i<controllerInstance.getPlaylistCount(); i++){
             JMenuItem playlistOption = new JMenuItem(controllerInstance.getPlaylist(i).getName());
-            
+
             playlistOption.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                     controllerInstance.getPlaylist(playlistOption.getText()).addTrack((Path) searchTree.getLastSelectedPathComponent());
                 }
-
             });
 
             menu.add(playlistOption);
         }
+    }
+
+    private void paintTrackImageLabel(){
+        ImageIcon image= new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (3).png")));
+        trackImage.setIcon(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
     }
 }
