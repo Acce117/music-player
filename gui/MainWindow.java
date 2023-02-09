@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
 public class MainWindow extends JDialog {
     private JPanel contentPane;
     private JProgressBar progressBar1;
@@ -30,6 +31,8 @@ public class MainWindow extends JDialog {
     private JPanel auxPane1;
     private JButton stop;
     private JTable table1;
+    private JScrollPane defaultScrollPane;
+    private JPanel defaultPanel;
     private int selectedTab;
 
     private JPopupMenu popupMenu;
@@ -38,6 +41,7 @@ public class MainWindow extends JDialog {
     final private MusicPlayer playerInstance;
 
     final private Controller controllerInstance;
+
     public MainWindow() throws IOException {
         this.playerInstance = MusicPlayer.getInstance();
         this.controllerInstance = Controller.getInstance();
@@ -59,7 +63,7 @@ public class MainWindow extends JDialog {
             playlistPane.setBackground(null);
 
             newPlaylist.addActionListener(e -> {
-                AskForPlaylistName ask = new AskForPlaylistName(playlists);
+                AskForPlaylistName ask = new AskForPlaylistName(playlists, menu, searchTree);
                 ask.pack();
                 ask.setVisible(true);
             });
@@ -73,27 +77,26 @@ public class MainWindow extends JDialog {
             searchTree.addTreeSelectionListener(e -> {
                 try {
                     Path file = (Path) searchTree.getSelectionPath().getLastPathComponent();
-                    if(!Files.isDirectory(file) && Files.exists(file)) {
+                    if (!Files.isDirectory(file) && Files.exists(file)) {
                         playerInstance.loadFile(file);
                         play.setEnabled(true);
                         stop.setEnabled(true);
                     }
 
-                }
-                catch (BasicPlayerException ex) {
+                } catch (BasicPlayerException ex) {
                     throw new RuntimeException(ex);
                 }
             });
 
             MouseListener ml = new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
-                    if(SwingUtilities.isRightMouseButton(e)){
+                    if (SwingUtilities.isRightMouseButton(e)) {
                         int selRow = searchTree.getRowForLocation(e.getX(), e.getY());
                         TreePath selPath = searchTree.getPathForLocation(e.getX(), e.getY());
                         searchTree.setSelectionPath(selPath);
-                        if (selRow>-1){
+                        if (selRow > -1) {
                             searchTree.setSelectionRow(selRow);
-                            fillMenu();
+                            //fillMenu();
                             popupMenu.show(searchTree, e.getX(), e.getY());
                         }
                     }
@@ -124,9 +127,9 @@ public class MainWindow extends JDialog {
             play.setIcon(new ImageIcon(image.getImage().getScaledInstance(play.getWidth(), play.getHeight(), Image.SCALE_SMOOTH)));
             play.addActionListener(e -> {
                 try {
-                    if(playerInstance.isPlaying() == 1)
+                    if (playerInstance.isPlaying() == 1)
                         playerInstance.pause();
-                    else if(playerInstance.isPlaying() == 2)
+                    else if (playerInstance.isPlaying() == 2)
                         playerInstance.resume();
                     else
                         playerInstance.play();
@@ -177,37 +180,33 @@ public class MainWindow extends JDialog {
         }
     }
 
-    private void getPopupMenu(){
+    private void getPopupMenu() {
         popupMenu = new JPopupMenu("Works");
 
         popupMenu.add(getPlaylistMenu());
     }
 
-    private JMenu getPlaylistMenu(){
+    private JMenu getPlaylistMenu() {
         menu = new JMenu("Add to playlist...");
-        fillMenu();
+
+        fillDefaultMenu();
         return menu;
     }
 
-    private void fillMenu(){
-        menu.removeAll();
+    private void fillDefaultMenu() {
+        JMenuItem playlistOption = new JMenuItem(controllerInstance.getPlaylist(0).getName());
+        playlistOption.addActionListener(e -> {
+            Path newTrack = (Path) searchTree.getLastSelectedPathComponent();
+            controllerInstance.getPlaylist(playlistOption.getText()).addTrack(newTrack);
+            ((PlaylistModel) (table1.getModel())).addRow(newTrack);
+        });
 
-        for(int i = 0; i<controllerInstance.getPlaylistCount(); i++){
-            JMenuItem playlistOption = new JMenuItem(controllerInstance.getPlaylist(i).getName());
-
-            playlistOption.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    controllerInstance.getPlaylist(playlistOption.getText()).addTrack((Path) searchTree.getLastSelectedPathComponent());
-                }
-            });
-
-            menu.add(playlistOption);
-        }
+        menu.add(playlistOption);
     }
 
-    private void paintTrackImageLabel(){
-        ImageIcon image= new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (3).png")));
+    private void paintTrackImageLabel() {
+        ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (3).png")));
         trackImage.setIcon(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
     }
+
 }
