@@ -2,8 +2,6 @@ package run;
 
 import gui.MainWindow;
 import com.formdev.flatlaf.FlatLightLaf;
-import src.Controller;
-
 import javax.swing.*;
 import java.io.IOException;
 public class Main {

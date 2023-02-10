@@ -1,7 +1,6 @@
 package utils;
 
 import javax.swing.event.TreeModelListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import java.io.File;
@@ -49,7 +48,7 @@ public class TreeModelCustomized implements TreeModel {
     */
     public Object[] getChildren(Object parent) {
 
-        Object children[] = new Path[0];
+        Object children[] = null;// = new Path[0];
         Stream<Path> aux;
         try {
             aux = Files.list(Path.of(parent.toString()));

@@ -4,6 +4,7 @@ import src.Controller;
 import src.Playlist;
 
 import javax.swing.table.DefaultTableModel;
+import java.nio.file.Files;
 import java.nio.file.Path;
 public class PlaylistModel extends DefaultTableModel {
     private static int instancesCount = 0;
@@ -23,14 +24,18 @@ public class PlaylistModel extends DefaultTableModel {
         Playlist playlist = Controller.getInstance().getPlaylist(actualPlaylist);
 
         for(int i = 0; i< playlist.getSize(); i++){
-            row[0] = playlist.getTrack(i).toString();
+            row[0] = playlist.getTrack(i).getFileName().toString();
             addRow(row);
         }
     }
 
     public void addRow(Path track) {
-        row[0] = track.getFileName().toString();
-        super.addRow(row);
+        if(Files.isDirectory(track))
+            update();
+        else {
+            row[0] = track.getFileName().toString();
+            super.addRow(row);
+        }
     }
 
     public static int getInstancesCount(){

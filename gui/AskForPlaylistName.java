@@ -70,7 +70,6 @@ public class AskForPlaylistName extends JDialog {
     private JScrollPane getScrollPane() {
         scrollPane = new JScrollPane();
         scrollPane.setSize(newPanel.getSize());
-        scrollPane.add(getTable());
         scrollPane.setViewportView(getTable());
         return scrollPane;
     }
