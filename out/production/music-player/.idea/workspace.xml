@@ -91,14 +91,19 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/utils/TreeModelCustomized.java</url>
-          <line>92</line>
-          <option name="timeStamp" value="3" />
+          <url>file://$PROJECT_DIR$/gui/AskForPlaylistName.java</url>
+          <line>78</line>
+          <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/utils/CellRendererCustomized.java</url>
-          <line>30</line>
-          <option name="timeStamp" value="4" />
+          <url>file://$PROJECT_DIR$/utils/PlaylistModel.java</url>
+          <line>14</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/gui/MainWindow.java</url>
+          <line>114</line>
+          <option name="timeStamp" value="9" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

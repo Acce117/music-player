@@ -7,6 +7,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.nio.file.Path;
 
 public class AskForPlaylistName extends JDialog {
@@ -40,7 +41,11 @@ public class AskForPlaylistName extends JDialog {
                     @Override
                     public void actionPerformed(ActionEvent e) {
                         Path newTrack = (Path) searchTree.getLastSelectedPathComponent();
-                        Controller.getInstance().getPlaylist(name).addTrack(newTrack);
+                        try {
+                            Controller.getInstance().getPlaylist(name).addTrack(newTrack);
+                        } catch (IOException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         ((PlaylistModel) table.getModel()).addRow(newTrack);
                     }
                 });

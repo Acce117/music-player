@@ -7,6 +7,8 @@ import utils.CellRendererCustomized;
 import utils.PlaylistModel;
 import utils.TreeModelCustomized;
 import javax.swing.*;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
@@ -54,7 +56,7 @@ public class MainWindow extends JDialog {
         {//optionPanel configuration
             tabbedPane.setBackground(null);
             auxPane1.setBackground(null);
-            selectedTab = -1;
+            //selectedTab = -1;
             directoryPane.setBackground(null);
             optionPanel.setBackground(null);
         }
@@ -71,7 +73,7 @@ public class MainWindow extends JDialog {
 
         {//tree1 configuration
             searchTree.setBackground(null);
-            searchTree.setModel(new TreeModelCustomized());
+            searchTree.setModel(TreeModelCustomized.getInstance());
             searchTree.setRootVisible(false);
             searchTree.setCellRenderer(new CellRendererCustomized());
             searchTree.addTreeSelectionListener(e -> {
@@ -96,7 +98,6 @@ public class MainWindow extends JDialog {
                         searchTree.setSelectionPath(selPath);
                         if (selRow > -1) {
                             searchTree.setSelectionRow(selRow);
-                            //fillMenu();
                             popupMenu.show(searchTree, e.getX(), e.getY());
                         }
                     }
@@ -197,7 +198,11 @@ public class MainWindow extends JDialog {
         JMenuItem playlistOption = new JMenuItem(controllerInstance.getPlaylist(0).getName());
         playlistOption.addActionListener(e -> {
             Path newTrack = (Path) searchTree.getLastSelectedPathComponent();
-            controllerInstance.getPlaylist(playlistOption.getText()).addTrack(newTrack);
+            try {
+                controllerInstance.getPlaylist(playlistOption.getText()).addTrack(newTrack);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
             ((PlaylistModel) (table1.getModel())).addRow(newTrack);
         });
 

@@ -19,11 +19,20 @@ it takes as root the path used by the Explorer class in the src package
 public class TreeModelCustomized implements TreeModel {
     private Path root;
     private Path[] rootChildren;
-    public TreeModelCustomized() throws IOException {
+
+    private static TreeModelCustomized instance;
+    private TreeModelCustomized() throws IOException {
         this.root = Path.of("System");
         fillRootChildren();
     }
 
+    public static TreeModelCustomized getInstance() throws IOException {
+        if(instance == null){
+            instance = new TreeModelCustomized();
+        }
+
+        return instance;
+    }
     private void fillRootChildren(){
         File[] rootsSystem = File.listRoots();
         rootChildren = new Path[rootsSystem.length];
@@ -38,9 +47,9 @@ public class TreeModelCustomized implements TreeModel {
     * sort the list to show the files as would do it the default explorer
     * return the resulted list
     */
-    private Object[] getChildren(Object parent) {
+    public Object[] getChildren(Object parent) {
 
-        Object children[] = new String[0];
+        Object children[] = new Path[0];
         Stream<Path> aux;
         try {
             aux = Files.list(Path.of(parent.toString()));
