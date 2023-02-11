@@ -7,8 +7,8 @@ import utils.CellRendererCustomized;
 import utils.PlaylistModel;
 import utils.TreeModelCustomized;
 import javax.swing.*;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
@@ -32,7 +32,7 @@ public class MainWindow extends JDialog {
     private JPanel playlistPane;
     private JPanel auxPane1;
     private JButton stop;
-    private JTable table1;
+    private JTable defaultTable;
     private JScrollPane defaultScrollPane;
     private JPanel defaultPanel;
     private int selectedTab;
@@ -112,7 +112,24 @@ public class MainWindow extends JDialog {
 
         getPopupMenu();
 
-        table1.setModel(new PlaylistModel());
+        {//defaultTable configuration
+            defaultTable.setModel(new PlaylistModel());
+            defaultTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+                @Override
+                public void valueChanged(ListSelectionEvent e) {
+                    Path track = controllerInstance.getPlaylist(playlists.getSelectedIndex()).getTrack(defaultTable.getSelectedRow());
+                    try {
+                        MusicPlayer.getInstance().loadFile(track);
+                        play.setEnabled(true);
+                        stop.setEnabled(true);
+                        previous.setEnabled(true);
+                        next.setEnabled(true);
+                    } catch (BasicPlayerException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            });
+        }
     }
 
     private void createUIComponents() {
@@ -203,7 +220,7 @@ public class MainWindow extends JDialog {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            ((PlaylistModel) (table1.getModel())).addRow(newTrack);
+            ((PlaylistModel) (defaultTable.getModel())).addRow(newTrack);
         });
 
         menu.add(playlistOption);

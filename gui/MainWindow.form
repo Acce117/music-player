@@ -180,7 +180,7 @@
                             <properties/>
                             <border type="none"/>
                             <children>
-                              <component id="c4975" class="javax.swing.JTable" binding="table1" default-binding="true">
+                              <component id="c4975" class="javax.swing.JTable" binding="defaultTable" default-binding="true">
                                 <constraints/>
                                 <properties/>
                               </component>
