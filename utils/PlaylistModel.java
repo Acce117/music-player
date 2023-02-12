@@ -37,8 +37,12 @@ public class PlaylistModel extends DefaultTableModel {
             super.addRow(row);
         }
     }
-
     public static int getInstancesCount(){
         return instancesCount;
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int column){
+        return false;
     }
 }

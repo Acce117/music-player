@@ -4,11 +4,10 @@ import javazoom.jlgui.basicplayer.BasicPlayerException;
 import src.Controller;
 import src.MusicPlayer;
 import utils.CellRendererCustomized;
+import utils.MouseAdapterCustomized;
 import utils.PlaylistModel;
 import utils.TreeModelCustomized;
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.*;
@@ -65,7 +64,7 @@ public class MainWindow extends JDialog {
             playlistPane.setBackground(null);
 
             newPlaylist.addActionListener(e -> {
-                AskForPlaylistName ask = new AskForPlaylistName(playlists, menu, searchTree);
+                AskForPlaylistName ask = new AskForPlaylistName(this);
                 ask.pack();
                 ask.setVisible(true);
             });
@@ -76,19 +75,6 @@ public class MainWindow extends JDialog {
             searchTree.setModel(TreeModelCustomized.getInstance());
             searchTree.setRootVisible(false);
             searchTree.setCellRenderer(new CellRendererCustomized());
-            searchTree.addTreeSelectionListener(e -> {
-                try {
-                    Path file = (Path) searchTree.getSelectionPath().getLastPathComponent();
-                    if (!Files.isDirectory(file) && Files.exists(file)) {
-                        playerInstance.loadFile(file);
-                        play.setEnabled(true);
-                        stop.setEnabled(true);
-                    }
-
-                } catch (BasicPlayerException ex) {
-                    throw new RuntimeException(ex);
-                }
-            });
 
             MouseListener ml = new MouseAdapter() {
                 public void mousePressed(MouseEvent e) {
@@ -99,6 +85,19 @@ public class MainWindow extends JDialog {
                         if (selRow > -1) {
                             searchTree.setSelectionRow(selRow);
                             popupMenu.show(searchTree, e.getX(), e.getY());
+                        }
+                    }
+                    else{
+                        try {
+                            Path file = (Path) searchTree.getSelectionPath().getLastPathComponent();
+                            if (!Files.isDirectory(file) && Files.exists(file)) {
+                                playerInstance.loadFile(file);
+                                play.setEnabled(true);
+                                stop.setEnabled(true);
+                            }
+
+                        } catch (BasicPlayerException ex) {
+                            throw new RuntimeException(ex);
                         }
                     }
                 }
@@ -114,21 +113,7 @@ public class MainWindow extends JDialog {
 
         {//defaultTable configuration
             defaultTable.setModel(new PlaylistModel());
-            defaultTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-                @Override
-                public void valueChanged(ListSelectionEvent e) {
-                    Path track = controllerInstance.getPlaylist(playlists.getSelectedIndex()).getTrack(defaultTable.getSelectedRow());
-                    try {
-                        MusicPlayer.getInstance().loadFile(track);
-                        play.setEnabled(true);
-                        stop.setEnabled(true);
-                        previous.setEnabled(true);
-                        next.setEnabled(true);
-                    } catch (BasicPlayerException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                }
-            });
+            defaultTable.addMouseListener(new MouseAdapterCustomized(this));
         }
     }
 
@@ -231,4 +216,35 @@ public class MainWindow extends JDialog {
         trackImage.setIcon(new ImageIcon(image.getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
     }
 
+    public JTable getDefaultTable(){
+        return defaultTable;
+    }
+
+    public JTabbedPane getPlaylists(){
+        return playlists;
+    }
+
+    public JTree getSearchTree(){
+        return searchTree;
+    }
+
+    public JMenu getMenu(){
+        return menu;
+    }
+
+    public void setPlayEnabled(boolean value) {
+        play.setEnabled(value);
+    }
+
+    public void setPreviousEnabled(boolean value) {
+        previous.setEnabled(value);
+    }
+
+    public void setNextEnabled(boolean value) {
+        next.setEnabled(value);
+    }
+
+    public void setStopEnabled(boolean value) {
+        stop.setEnabled(value);
+    }
 }

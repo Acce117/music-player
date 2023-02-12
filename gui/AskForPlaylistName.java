@@ -1,12 +1,11 @@
 package gui;
 
 import src.Controller;
+import utils.MouseAdapterCustomized;
 import utils.PlaylistModel;
 import utils.Validator;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.nio.file.Path;
 
@@ -20,7 +19,11 @@ public class AskForPlaylistName extends JDialog {
     private JScrollPane scrollPane;
     private JTable table;
 
-    public AskForPlaylistName(JTabbedPane tabbedPane, JMenu menu, JTree searchTree) {
+    private JTabbedPane tabbedPane;
+    private MainWindow mainWindow;
+    public AskForPlaylistName(MainWindow mainWindow) {
+        this.mainWindow = mainWindow;
+        this.tabbedPane = mainWindow.getPlaylists();
         setContentPane(contentPane);
         contentPane.setSize(200, 200);
         setModal(true);
@@ -37,19 +40,16 @@ public class AskForPlaylistName extends JDialog {
                 tabbedPane.setSelectedIndex(tabbedPane.getSelectedIndex() + 1);
                 //
                 JMenuItem menuItem = new JMenuItem(name);
-                menuItem.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        Path newTrack = (Path) searchTree.getLastSelectedPathComponent();
-                        try {
-                            Controller.getInstance().getPlaylist(name).addTrack(newTrack);
-                        } catch (IOException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                        ((PlaylistModel) table.getModel()).addRow(newTrack);
+                menuItem.addActionListener(e1 -> {
+                    Path newTrack = (Path) mainWindow.getSearchTree().getLastSelectedPathComponent();
+                    try {
+                        Controller.getInstance().getPlaylist(name).addTrack(newTrack);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
                     }
+                    ((PlaylistModel) table.getModel()).addRow(newTrack);
                 });
-                menu.add(menuItem);
+                mainWindow.getMenu().add(menuItem);
                 dispose();
             } catch (Exception ex) {
                 errorMessage.setText(ex.getMessage());
@@ -79,6 +79,7 @@ public class AskForPlaylistName extends JDialog {
         table.setModel(new PlaylistModel());
         table.setSize(scrollPane.getSize());
         table.setFillsViewportHeight(true);
+        table.addMouseListener(new MouseAdapterCustomized(table, mainWindow));
 
         return table;
     }
