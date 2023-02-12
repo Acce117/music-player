@@ -13,18 +13,19 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MouseAdapterCustomized extends MouseAdapter {
-
     private int count = 0;
     private Timer timer = new Timer("doubleClickTimer", false);
     private JTable tableReference;
     private JTabbedPane tabbedPane;
     private Controller controllerInstance;
     private MainWindow mainWindow;
+    private MusicPlayer playerInstance;
     public MouseAdapterCustomized(MainWindow mainWindow){
         super();
         this.mainWindow = mainWindow;
         tableReference = mainWindow.getDefaultTable();
         controllerInstance = Controller.getInstance();
+        playerInstance = MusicPlayer.getInstance();
     }
 
     public MouseAdapterCustomized(JTable table, MainWindow mainWindow){
@@ -41,7 +42,8 @@ public class MouseAdapterCustomized extends MouseAdapter {
                 public void run() {
                     if (count == 2) {
                         try {
-                            MusicPlayer.getInstance().loadFile(track);
+                            playerInstance.loadFile(track);
+                            playerInstance.play();
                             mainWindow.setPlayEnabled(true);
                             mainWindow.setPreviousEnabled(true);
                             mainWindow.setNextEnabled(true);

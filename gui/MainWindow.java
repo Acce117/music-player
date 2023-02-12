@@ -3,6 +3,7 @@ package gui;
 import javazoom.jlgui.basicplayer.BasicPlayerException;
 import src.Controller;
 import src.MusicPlayer;
+import src.Playlist;
 import utils.CellRendererCustomized;
 import utils.MouseAdapterCustomized;
 import utils.PlaylistModel;
@@ -35,9 +36,7 @@ public class MainWindow extends JDialog {
     private JScrollPane defaultScrollPane;
     private JPanel defaultPanel;
     private int selectedTab;
-
     private JPopupMenu popupMenu;
-
     private JMenu menu;
     final private MusicPlayer playerInstance;
 
@@ -150,7 +149,25 @@ public class MainWindow extends JDialog {
             previous.setEnabled(false);
             ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (11).png")));
             previous.setIcon(new ImageIcon(image.getImage().getScaledInstance(previous.getWidth(), previous.getHeight(), Image.SCALE_SMOOTH)));
+            previous.addActionListener(e -> {
+                try {
+                    Playlist playlist = controllerInstance.getActualPlaylist();
+                    int track = playlist.getActualTrack();
+                    playerInstance.loadFile(playlist.getTrack(track - 1));
+                    playerInstance.play();
+                }
+                catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
+                }
+                catch(IndexOutOfBoundsException ex){
+                    JPopupMenu popupMessage = new JPopupMenu();
+                    popupMessage.setSize(100, 25);
+                    JLabel label = new JLabel(" Start of the playlist ");
+                    popupMessage.add(label);
+                    popupMessage.show(trackImage, trackImage.getWidth()/2 - popupMessage.getWidth()/2, trackImage.getHeight() - popupMessage.getHeight());
+                }
 
+            });
         }
 
         {//next button's configuration
@@ -161,8 +178,26 @@ public class MainWindow extends JDialog {
             next.setEnabled(false);
             ImageIcon image = new ImageIcon(Toolkit.getDefaultToolkit().getImage(MainWindow.class.getResource("\\png\\pngwing.com (10).png")));
             next.setIcon(new ImageIcon(image.getImage().getScaledInstance(next.getWidth(), next.getHeight(), Image.SCALE_SMOOTH)));
-
+            next.addActionListener(e -> {
+                try {
+                    Playlist playlist = controllerInstance.getActualPlaylist();
+                    int trackIndex = playlist.getActualTrack();
+                    Path track = playlist.getTrack(trackIndex+1);
+                    playerInstance.loadFile(track);
+                    playerInstance.play();
+                }
+                catch (BasicPlayerException ex) {
+                    throw new RuntimeException(ex);
+                }catch(IndexOutOfBoundsException ex){
+                    JPopupMenu popupMessage = new JPopupMenu();
+                    popupMessage.setSize(100, 25);
+                    JLabel label = new JLabel(" End of the playlist ");
+                    popupMessage.add(label);
+                    popupMessage.show(trackImage, trackImage.getWidth()/2 - popupMessage.getWidth()/2, trackImage.getHeight() - popupMessage.getHeight());
+                }
+            });
         }
+
 
         {//stop button's configuration
             stop = new JButton();

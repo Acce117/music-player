@@ -12,15 +12,20 @@ public class Playlist {
     private ArrayList<Object> tracks;
     private int size;
     private String name;
-
+    private int actualTrack;
     public Playlist(String name){
         this.name = name;
         this.tracks = new ArrayList<>();
         size = 0;
+        actualTrack = 0;
     }
 
 
     public Path getTrack(int index){
+        if(index >= size || index < 0){
+            throw new IndexOutOfBoundsException();
+        }
+        actualTrack = index;
         return (Path)tracks.get(index);
     }
 
@@ -56,5 +61,9 @@ public class Playlist {
     }
     public String getName() {
         return name;
+    }
+
+    public int getActualTrack() {
+        return actualTrack;
     }
 }

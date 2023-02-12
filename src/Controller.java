@@ -8,9 +8,10 @@ public class Controller {
     private ArrayList<Playlist> playlists;
     private static Controller instance;
     final private MusicPlayer musicPlayer = MusicPlayer.getInstance();
-
+    private Playlist actualPlaylist;
     private int playlistCount;
     private Controller(){
+        actualPlaylist = null;
         playlists = new ArrayList<>();
         playlists.add(new Playlist("Default"));
         playlistCount = 1;
@@ -24,13 +25,15 @@ public class Controller {
         return instance;
     }
 
-    public void loadTrack(int playList, int trackIndex) throws BasicPlayerException {
-        Path track = playlists.get(playList).getTrack(trackIndex);
+    public void loadTrack(int playlist, int trackIndex) throws BasicPlayerException {
+        Path track = playlists.get(playlist).getTrack(trackIndex);
         musicPlayer.loadFile(track);
+        actualPlaylist = playlists.get(playlist);
     }
 
     public Playlist getPlaylist(int indexPlaylist) {
-        return playlists.get(indexPlaylist);
+        actualPlaylist = playlists.get(indexPlaylist);
+        return actualPlaylist;
     }
 
     public Playlist getPlaylist(String name){
@@ -39,7 +42,7 @@ public class Controller {
         while(!playlist.getName().equals(name)){
             playlist = getPlaylist(index++);
         }
-
+        actualPlaylist = playlist;
         return playlist;
     }
     public void addPlaylist(String name){
@@ -54,5 +57,9 @@ public class Controller {
 
     public int getPlaylistCount(){
         return playlistCount;
+    }
+
+    public Playlist getActualPlaylist() {
+        return actualPlaylist;
     }
 }

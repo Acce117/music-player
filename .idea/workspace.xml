@@ -101,9 +101,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/run/Main.java</url>
-          <line>9</line>
-          <option name="timeStamp" value="16" />
+          <url>file://$PROJECT_DIR$/gui/MainWindow.java</url>
+          <line>182</line>
+          <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
