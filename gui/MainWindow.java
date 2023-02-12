@@ -35,6 +35,10 @@ public class MainWindow extends JDialog {
     private JTable defaultTable;
     private JScrollPane defaultScrollPane;
     private JPanel defaultPanel;
+    private JLabel trackName;
+    private JPanel ProgressPanel;
+    private JLabel totalTime;
+    private JLabel timeLabel;
     private int selectedTab;
     private JPopupMenu popupMenu;
     private JMenu menu;
@@ -91,6 +95,7 @@ public class MainWindow extends JDialog {
                             Path file = (Path) searchTree.getSelectionPath().getLastPathComponent();
                             if (!Files.isDirectory(file) && Files.exists(file)) {
                                 playerInstance.loadFile(file);
+                                trackName.setText(String.valueOf(file.getFileName()));
                                 play.setEnabled(true);
                                 stop.setEnabled(true);
                             }
@@ -152,8 +157,10 @@ public class MainWindow extends JDialog {
             previous.addActionListener(e -> {
                 try {
                     Playlist playlist = controllerInstance.getActualPlaylist();
-                    int track = playlist.getActualTrack();
-                    playerInstance.loadFile(playlist.getTrack(track - 1));
+                    int trackIndex = playlist.getActualTrack();
+                    Path track = playlist.getTrack(trackIndex - 1);
+                    playerInstance.loadFile(track);
+                    trackName.setText(String.valueOf(track.getFileName()));
                     playerInstance.play();
                 }
                 catch (BasicPlayerException ex) {
@@ -184,6 +191,7 @@ public class MainWindow extends JDialog {
                     int trackIndex = playlist.getActualTrack();
                     Path track = playlist.getTrack(trackIndex+1);
                     playerInstance.loadFile(track);
+                    trackName.setText(String.valueOf(track.getFileName()));
                     playerInstance.play();
                 }
                 catch (BasicPlayerException ex) {
@@ -281,5 +289,9 @@ public class MainWindow extends JDialog {
 
     public void setStopEnabled(boolean value) {
         stop.setEnabled(value);
+    }
+
+    public JLabel getTrackName(){
+        return trackName;
     }
 }

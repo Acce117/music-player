@@ -43,6 +43,7 @@ public class MouseAdapterCustomized extends MouseAdapter {
                     if (count == 2) {
                         try {
                             playerInstance.loadFile(track);
+                            mainWindow.getTrackName().setText(String.valueOf(track.getFileName()));
                             playerInstance.play();
                             mainWindow.setPlayEnabled(true);
                             mainWindow.setPreviousEnabled(true);

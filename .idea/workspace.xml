@@ -102,7 +102,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/gui/MainWindow.java</url>
-          <line>182</line>
+          <line>186</line>
           <option name="timeStamp" value="20" />
         </line-breakpoint>
       </breakpoints>
